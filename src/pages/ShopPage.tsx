@@ -98,7 +98,7 @@ export default function ShopPage() {
           onChange={(e) => setPriceRange([0, Number(e.target.value)])}
           className="w-40 accent-primary"
         />
-        <span className="text-sm font-medium">${priceRange[0]} – ${priceRange[1]}</span>
+        <span className="text-sm font-medium">₹{priceRange[0]} – ₹{priceRange[1]}</span>
       </div>
 
       {/* Results */}
