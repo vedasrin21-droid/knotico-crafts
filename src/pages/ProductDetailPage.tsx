@@ -59,7 +59,7 @@ export default function ProductDetailPage() {
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
           <span className="text-sm text-primary font-medium uppercase tracking-wider">{product.category}</span>
           <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground mt-1">{product.name}</h1>
-          <p className="text-3xl font-bold text-primary mt-3">${product.price}</p>
+          <p className="text-3xl font-bold text-primary mt-3"><p className="text-3xl font-bold text-primary mt-3">₹{product.price}</p></p>
           <p className="text-muted-foreground mt-4 leading-relaxed">{product.description}</p>
           <p className="text-sm text-muted-foreground mt-3">Material: <span className="text-foreground">{product.material}</span></p>
           <p className="text-sm text-muted-foreground mt-1">

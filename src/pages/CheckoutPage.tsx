@@ -126,7 +126,7 @@ export default function CheckoutPage() {
           </div>
 
           <button type="submit" disabled={submitting} className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-terracotta-dark transition-colors disabled:opacity-50">
-            {submitting ? "Placing Order..." : `Place Order — $${totalPrice().toFixed(2)}`}
+            {submitting ? "Placing Order..." : `Place Order — ₹${totalPrice().toFixed(2)}`}
           </button>
         </form>
 
@@ -141,13 +141,13 @@ export default function CheckoutPage() {
                     <p className="text-sm font-medium truncate">{item.name}</p>
                     <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
                   </div>
-                  <p className="text-sm font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                  <p className="text-sm font-semibold">₹{(item.price * item.quantity).toFixed(2)}</p>
                 </div>
               ))}
             </div>
             <div className="border-t border-border mt-4 pt-4 flex justify-between font-bold text-lg">
               <span>Total</span>
-              <span className="text-primary">${totalPrice().toFixed(2)}</span>
+              <span className="text-primary">₹{totalPrice().toFixed(2)}</span>
             </div>
           </div>
         </div>

@@ -91,7 +91,7 @@ export default function AdminOrders() {
                   <p className="text-xs text-muted-foreground mt-2">{new Date(order.created_at).toLocaleDateString()}</p>
                 </div>
                 <div className="flex flex-col items-end gap-2">
-                  <span className="text-lg font-bold text-primary">${Number(order.total_amount).toFixed(2)}</span>
+                  <span className="text-lg font-bold text-primary"><span className="text-lg font-bold text-primary">₹{Number(order.total_amount).toFixed(2)}</span></span>
                   <span className={`px-2 py-1 rounded-md text-xs font-medium capitalize ${statusColors[order.status]}`}>
                     {order.status}
                   </span>
