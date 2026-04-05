@@ -51,7 +51,7 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="font-medium text-foreground">Location</h3>
-              <p className="text-sm text-muted-foreground">Artisan District, Creative City</p>
+              <p className="text-sm text-muted-foreground">Bhimavaram, Andhra Pradesh, India</p>
             </div>
           </div>
         </div>
