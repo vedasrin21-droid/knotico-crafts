@@ -2,13 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
-import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCartStore();
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [form, setForm] = useState({
@@ -27,16 +25,6 @@ export default function CheckoutPage() {
     );
   }
 
-  if (!user) {
-    return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="font-heading text-2xl font-bold">Please sign in to checkout</h1>
-        <p className="text-muted-foreground mt-2">You need an account to place an order.</p>
-        <Link to="/auth" className="inline-block mt-4 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-terracotta-dark transition-colors">Sign In</Link>
-      </div>
-    );
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -44,7 +32,6 @@ export default function CheckoutPage() {
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
-        user_id: user.id,
         customer_name: form.fullName,
         customer_email: form.email,
         phone: form.phone,
@@ -87,7 +74,7 @@ export default function CheckoutPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
         <form onSubmit={handleSubmit} className="md:col-span-3 space-y-4">
-          <h2 className="font-heading text-xl font-semibold">Shipping Details</h2>
+          <h2 className="font-heading text-xl font-semibold">Your Details</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium block mb-1.5">Full Name *</label>
