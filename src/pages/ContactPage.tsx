@@ -33,7 +33,7 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="font-medium text-foreground">Email</h3>
-              <p className="text-sm text-muted-foreground">hello@knotico.com</p>
+              <p className="text-sm text-muted-foreground">knotico1@gmail.com</p>
             </div>
           </div>
           <div className="flex items-start gap-4">
@@ -42,7 +42,7 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="font-medium text-foreground">Phone</h3>
-              <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+              <p className="text-sm text-muted-foreground">+91 9032995731</p>
             </div>
           </div>
           <div className="flex items-start gap-4">
@@ -51,7 +51,7 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="font-medium text-foreground">Location</h3>
-              <p className="text-sm text-muted-foreground">Artisan District, Creative City</p>
+              <p className="text-sm text-muted-foreground">Bhimavaram, Andhra Pradesh, India</p>
             </div>
           </div>
         </div>
