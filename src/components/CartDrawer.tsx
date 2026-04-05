@@ -50,7 +50,7 @@ export default function CartDrawer() {
                       <img src={item.image} alt={item.name} className="w-20 h-20 rounded-md object-cover" />
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-sm truncate">{item.name}</h4>
-                        <p className="text-sm text-primary font-semibold mt-1">${item.price}</p>
+                        <p className="text-sm text-primary font-semibold mt-1"><p className="text-sm text-primary font-semibold mt-1">₹{item.price}</p></p>
                         {item.customNote && (
                           <p className="text-xs text-muted-foreground mt-1 truncate">Note: {item.customNote}</p>
                         )}
