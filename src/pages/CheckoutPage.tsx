@@ -2,10 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCartStore();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [form, setForm] = useState({
@@ -24,10 +27,52 @@ export default function CheckoutPage() {
     );
   }
 
+  if (!user) {
+    return (
+      <div className="container mx-auto px-4 py-20 text-center">
+        <h1 className="font-heading text-2xl font-bold">Please sign in to checkout</h1>
+        <p className="text-muted-foreground mt-2">You need an account to place an order.</p>
+        <Link to="/auth" className="inline-block mt-4 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-terracotta-dark transition-colors">Sign In</Link>
+      </div>
+    );
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 1200));
+
+    const { data: order, error: orderError } = await supabase
+      .from("orders")
+      .insert({
+        user_id: user.id,
+        customer_name: form.fullName,
+        customer_email: form.email,
+        phone: form.phone,
+        total_amount: totalPrice(),
+        shipping_address: form.address,
+        city: form.city,
+        zip: form.zip,
+        notes: form.notes || null,
+      })
+      .select("id")
+      .single();
+
+    if (orderError || !order) {
+      toast({ title: "Error placing order", description: orderError?.message, variant: "destructive" });
+      setSubmitting(false);
+      return;
+    }
+
+    const orderItems = items.map((item) => ({
+      order_id: order.id,
+      product_name: item.name,
+      quantity: item.quantity,
+      price: item.price,
+      custom_note: item.customNote || null,
+      variant: item.variant || null,
+    }));
+
+    await supabase.from("order_items").insert(orderItems);
     clearCart();
     setSubmitting(false);
     navigate("/order-confirmed");
@@ -85,7 +130,6 @@ export default function CheckoutPage() {
           </button>
         </form>
 
-        {/* Order Summary */}
         <div className="md:col-span-2">
           <div className="rounded-xl bg-card border border-border p-5 sticky top-24">
             <h2 className="font-heading text-lg font-semibold mb-4">Order Summary</h2>

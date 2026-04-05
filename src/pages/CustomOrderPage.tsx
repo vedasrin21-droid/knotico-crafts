@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Upload } from "lucide-react";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function CustomOrderPage() {
   const { toast } = useToast();
   const [form, setForm] = useState({
-    name: "", email: "", phone: "", productType: "", description: "", quantity: "1", timeline: "", 
+    name: "", email: "", phone: "", productType: "", description: "", quantity: "1", timeline: "",
   });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -14,10 +15,24 @@ export default function CustomOrderPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    setSubmitted(true);
+
+    const { error } = await supabase.from("custom_order_requests").insert({
+      name: form.name,
+      email: form.email,
+      phone: form.phone || null,
+      product_type: form.productType,
+      description: form.description,
+      quantity: parseInt(form.quantity),
+      timeline: form.timeline || null,
+    });
+
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      setSubmitted(true);
+      toast({ title: "Request Submitted!", description: "We'll get back to you within 24-48 hours." });
+    }
     setSubmitting(false);
-    toast({ title: "Request Submitted!", description: "We'll get back to you within 24-48 hours." });
   };
 
   const update = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
