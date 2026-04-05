@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingBag, Heart, Menu, X, User } from "lucide-react";
+import { ShoppingBag, Heart, Menu, X, User, Shield, LogOut } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
+import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
@@ -16,6 +17,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { toggleCart, totalItems } = useCartStore();
+  const { user, isAdmin, signOut } = useAuth();
   const itemCount = totalItems();
 
   return (
@@ -39,7 +41,12 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          {isAdmin && (
+            <Link to="/admin" className="p-2 hover:text-primary transition-colors" aria-label="Admin" title="Admin Dashboard">
+              <Shield className="w-5 h-5" />
+            </Link>
+          )}
           <Link to="/wishlist" className="p-2 hover:text-primary transition-colors" aria-label="Wishlist">
             <Heart className="w-5 h-5" />
           </Link>
@@ -51,11 +58,16 @@ export default function Header() {
               </span>
             )}
           </button>
-          <button
-            className="md:hidden p-2"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Menu"
-          >
+          {user ? (
+            <button onClick={signOut} className="p-2 hover:text-primary transition-colors" aria-label="Sign out" title="Sign out">
+              <LogOut className="w-5 h-5" />
+            </button>
+          ) : (
+            <Link to="/auth" className="p-2 hover:text-primary transition-colors" aria-label="Account">
+              <User className="w-5 h-5" />
+            </Link>
+          )}
+          <button className="md:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
@@ -71,17 +83,20 @@ export default function Header() {
           >
             <nav className="flex flex-col p-4 gap-3">
               {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setMobileOpen(false)}
-                  className={`py-2 text-sm font-medium transition-colors ${
-                    location.pathname === link.to ? "text-primary" : "text-muted-foreground"
-                  }`}
-                >
+                <Link key={link.to} to={link.to} onClick={() => setMobileOpen(false)} className={`py-2 text-sm font-medium transition-colors ${location.pathname === link.to ? "text-primary" : "text-muted-foreground"}`}>
                   {link.label}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link to="/admin" onClick={() => setMobileOpen(false)} className="py-2 text-sm font-medium text-muted-foreground hover:text-primary">
+                  Admin Dashboard
+                </Link>
+              )}
+              {user ? (
+                <button onClick={() => { signOut(); setMobileOpen(false); }} className="py-2 text-sm font-medium text-muted-foreground text-left">Sign Out</button>
+              ) : (
+                <Link to="/auth" onClick={() => setMobileOpen(false)} className="py-2 text-sm font-medium text-primary">Sign In</Link>
+              )}
             </nav>
           </motion.div>
         )}
