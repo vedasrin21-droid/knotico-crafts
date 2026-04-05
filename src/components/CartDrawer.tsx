@@ -83,7 +83,7 @@ export default function CartDrawer() {
                 <div className="p-4 border-t border-border space-y-3">
                   <div className="flex justify-between font-semibold">
                     <span>Subtotal</span>
-                    <span>${totalPrice().toFixed(2)}</span>
+                    <span><span>₹{totalPrice().toFixed(2)}</span></span>
                   </div>
                   <Link
                     to="/checkout"

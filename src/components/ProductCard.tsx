@@ -56,7 +56,7 @@ export default function ProductCard({ product, index = 0 }: Props) {
         </Link>
         <p className="text-sm text-muted-foreground mt-0.5 capitalize">{product.category}</p>
         <div className="flex items-center justify-between mt-2">
-          <span className="text-lg font-bold text-primary">${product.price}</span>
+          <span className="text-lg font-bold text-primary"><span className="text-lg font-bold text-primary">₹{product.price}</span></span>
           <button
             onClick={() =>
               addItem({

@@ -163,7 +163,7 @@ export default function AdminProducts() {
                 <h3 className="font-medium text-sm truncate">{p.name}</h3>
                 <p className="text-xs text-muted-foreground capitalize">{p.category} · Stock: {p.stock} {p.featured && "· ⭐ Featured"}</p>
               </div>
-              <span className="text-sm font-bold text-primary">${Number(p.price).toFixed(2)}</span>
+              <span className="text-sm font-bold text-primary"><span className="text-sm font-bold text-primary">₹{Number(p.price).toFixed(2)}</span></span>
               <div className="flex gap-1">
                 <button onClick={() => startEdit(p)} className="p-2 hover:text-primary transition-colors"><Pencil className="w-4 h-4" /></button>
                 <button onClick={() => handleDelete(p.id)} className="p-2 hover:text-destructive transition-colors"><Trash2 className="w-4 h-4" /></button>
