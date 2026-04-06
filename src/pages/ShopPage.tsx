@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { products, type ProductCategory } from "@/data/products";
+import type { ProductCategory } from "@/data/products";
+import { useProducts } from "@/hooks/useProducts";
 import ProductCard from "@/components/ProductCard";
 
 const categories: { value: ProductCategory | "all"; label: string }[] = [
