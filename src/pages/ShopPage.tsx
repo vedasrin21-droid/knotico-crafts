@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { products, type ProductCategory } from "@/data/products";
+import type { ProductCategory } from "@/data/products";
+import { useProducts } from "@/hooks/useProducts";
 import ProductCard from "@/components/ProductCard";
 
 const categories: { value: ProductCategory | "all"; label: string }[] = [
@@ -24,6 +25,7 @@ export default function ShopPage() {
   const [sort, setSort] = useState("newest");
   const [search, setSearch] = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 200]);
+  const { products } = useProducts();
 
   const filtered = useMemo(() => {
     let result = [...products];
@@ -37,7 +39,7 @@ export default function ShopPage() {
     else if (sort === "price-asc") result.sort((a, b) => a.price - b.price);
     else result.sort((a, b) => b.price - a.price);
     return result;
-  }, [category, sort, search, priceRange]);
+  }, [category, sort, search, priceRange, products]);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">

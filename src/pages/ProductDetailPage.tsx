@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
 import { ArrowLeft, Heart, Minus, Plus, ShoppingBag } from "lucide-react";
-import { getProductById, products } from "@/data/products";
+import { useProducts } from "@/hooks/useProducts";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import ProductCard from "@/components/ProductCard";
@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const { getProductById, products } = useProducts();
   const product = getProductById(id || "");
   const [qty, setQty] = useState(1);
   const [note, setNote] = useState("");
