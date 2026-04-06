@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingBag, Heart, Menu, X, Shield } from "lucide-react";
+import { ShoppingBag, Heart, Menu, X, Shield, LogIn, LogOut } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
