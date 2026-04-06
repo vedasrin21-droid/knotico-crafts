@@ -29,9 +29,12 @@ export default function CheckoutPage() {
     e.preventDefault();
     setSubmitting(true);
 
-    const { data: order, error: orderError } = await supabase
+    const orderId = crypto.randomUUID();
+
+    const { error: orderError } = await supabase
       .from("orders")
       .insert({
+        id: orderId,
         customer_name: form.fullName,
         customer_email: form.email,
         phone: form.phone,
@@ -40,18 +43,17 @@ export default function CheckoutPage() {
         city: form.city,
         zip: form.zip,
         notes: form.notes || null,
-      })
-      .select("id")
-      .single();
+      });
 
-    if (orderError || !order) {
-      toast({ title: "Error placing order", description: orderError?.message, variant: "destructive" });
+    if (orderError) {
+      toast({ title: "Error placing order", description: orderError.message, variant: "destructive" });
       setSubmitting(false);
       return;
     }
 
     const orderItems = items.map((item) => ({
-      order_id: order.id,
+      order_id: orderId,
+      product_id: item.productId,
       product_name: item.name,
       quantity: item.quantity,
       price: item.price,
@@ -59,7 +61,14 @@ export default function CheckoutPage() {
       variant: item.variant || null,
     }));
 
-    await supabase.from("order_items").insert(orderItems);
+    const { error: orderItemsError } = await supabase.from("order_items").insert(orderItems);
+
+    if (orderItemsError) {
+      toast({ title: "Error placing order", description: orderItemsError.message, variant: "destructive" });
+      setSubmitting(false);
+      return;
+    }
+
     clearCart();
     setSubmitting(false);
     navigate("/order-confirmed");
