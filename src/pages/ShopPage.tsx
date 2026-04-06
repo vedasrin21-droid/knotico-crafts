@@ -39,7 +39,7 @@ export default function ShopPage() {
     else if (sort === "price-asc") result.sort((a, b) => a.price - b.price);
     else result.sort((a, b) => b.price - a.price);
     return result;
-  }, [category, sort, search, priceRange]);
+  }, [category, sort, search, priceRange, products]);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">

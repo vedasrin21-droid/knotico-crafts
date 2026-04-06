@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Gift, Sparkles, Truck } from "lucide-react";
-import { getFeaturedProducts } from "@/data/products";
+import { useProducts } from "@/hooks/useProducts";
 import ProductCard from "@/components/ProductCard";
 import heroBg from "@/assets/hero-bg.jpg";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
 export default function HomePage() {
+  const { getFeaturedProducts } = useProducts();
   const featured = getFeaturedProducts().slice(0, 6);
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
