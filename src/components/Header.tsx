@@ -47,6 +47,15 @@ export default function Header() {
               <Shield className="w-5 h-5" />
             </Link>
           )}
+          {user ? (
+            <button onClick={() => signOut()} className="p-2 hover:text-primary transition-colors" aria-label="Sign Out" title="Sign Out">
+              <LogOut className="w-5 h-5" />
+            </button>
+          ) : (
+            <Link to="/auth" className="p-2 hover:text-primary transition-colors" aria-label="Sign In" title="Admin Sign In">
+              <LogIn className="w-5 h-5" />
+            </Link>
+          )}
           <Link to="/wishlist" className="p-2 hover:text-primary transition-colors" aria-label="Wishlist">
             <Heart className="w-5 h-5" />
           </Link>
