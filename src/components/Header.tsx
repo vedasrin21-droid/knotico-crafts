@@ -17,7 +17,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { toggleCart, totalItems } = useCartStore();
-  const { isAdmin } = useAuth();
+  const { isAdmin, user, signOut } = useAuth();
   const itemCount = totalItems();
 
   return (
