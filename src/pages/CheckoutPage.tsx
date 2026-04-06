@@ -53,7 +53,10 @@ export default function CheckoutPage() {
 
     const orderItems = items.map((item) => ({
       order_id: orderId,
-      product_id: item.productId,
+      product_id:
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(item.productId)
+          ? item.productId
+          : null,
       product_name: item.name,
       quantity: item.quantity,
       price: item.price,
