@@ -25,6 +25,7 @@ export default function ShopPage() {
   const [sort, setSort] = useState("newest");
   const [search, setSearch] = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 200]);
+  const { products } = useProducts();
 
   const filtered = useMemo(() => {
     let result = [...products];
