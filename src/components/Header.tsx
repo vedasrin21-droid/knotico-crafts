@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingBag, Heart, Menu, X, Shield } from "lucide-react";
+import { ShoppingBag, Heart, Menu, X, Shield, LogIn, LogOut } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,7 +17,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { toggleCart, totalItems } = useCartStore();
-  const { isAdmin } = useAuth();
+  const { isAdmin, user, signOut } = useAuth();
   const itemCount = totalItems();
 
   return (
@@ -45,6 +45,15 @@ export default function Header() {
           {isAdmin && (
             <Link to="/admin" className="p-2 hover:text-primary transition-colors" aria-label="Admin" title="Admin Dashboard">
               <Shield className="w-5 h-5" />
+            </Link>
+          )}
+          {user ? (
+            <button onClick={() => signOut()} className="p-2 hover:text-primary transition-colors" aria-label="Sign Out" title="Sign Out">
+              <LogOut className="w-5 h-5" />
+            </button>
+          ) : (
+            <Link to="/auth" className="p-2 hover:text-primary transition-colors" aria-label="Sign In" title="Admin Sign In">
+              <LogIn className="w-5 h-5" />
             </Link>
           )}
           <Link to="/wishlist" className="p-2 hover:text-primary transition-colors" aria-label="Wishlist">
