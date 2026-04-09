@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Gift, Sparkles, Truck } from "lucide-react";
 import { useProducts } from "@/hooks/useProducts";
 import ProductCard from "@/components/ProductCard";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroBg from "@/assets/hero-cover.png";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
