@@ -2,12 +2,13 @@ import { Link } from "react-router-dom";
 import { Heart, Trash2 } from "lucide-react";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useCartStore } from "@/store/cartStore";
-import { getProductById } from "@/data/products";
+import { useProducts } from "@/hooks/useProducts";
 
 export default function WishlistPage() {
   const { items, toggleItem } = useWishlistStore();
   const addItem = useCartStore((s) => s.addItem);
-  const wishlistProducts = items.map(getProductById).filter(Boolean);
+  const { getProductById } = useProducts();
+  const wishlistProducts = items.map((id) => getProductById(id)).filter(Boolean);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
@@ -31,7 +32,7 @@ export default function WishlistPage() {
                 <Link to={`/product/${product.id}`}>
                   <h3 className="font-heading font-semibold text-foreground hover:text-primary transition-colors">{product.name}</h3>
                 </Link>
-                <p className="text-primary font-bold mt-1">${product.price}</p>
+                <p className="text-primary font-bold mt-1">₹{product.price}</p>
                 <div className="flex gap-2 mt-3">
                   <button
                     onClick={() => addItem({ productId: product.id, name: product.name, price: product.price, image: product.images[0] })}
