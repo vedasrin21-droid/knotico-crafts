@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { products as localProducts, type Product, type ProductCategory } from "@/data/products";
+import type { Product, ProductCategory } from "@/data/products";
 
 export function useProducts() {
-  const [products, setProducts] = useState<Product[]>(localProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchProducts = async () => {
       const { data } = await supabase.from("products").select("*").order("created_at", { ascending: false });
-      if (data && data.length > 0) {
+      if (data) {
         const mapped: Product[] = data.map((p) => ({
           id: p.id,
           name: p.name,
@@ -23,14 +23,11 @@ export function useProducts() {
           material: p.material || "",
           createdAt: p.created_at,
         }));
-        // Merge: DB products first, then local products not in DB
-        const dbIds = new Set(mapped.map((m) => m.id));
-        const merged = [...mapped, ...localProducts.filter((l) => !dbIds.has(l.id))];
-        setProducts(merged);
+        setProducts(mapped);
       }
       setLoading(false);
     };
-    fetch();
+    fetchProducts();
   }, []);
 
   const getProductById = (id: string) => products.find((p) => p.id === id);
