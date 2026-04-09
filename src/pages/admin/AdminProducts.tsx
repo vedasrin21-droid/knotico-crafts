@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, X } from "lucide-react";
+import { Plus, Pencil, Trash2, X, ImagePlus } from "lucide-react";
 
 interface Product {
   id: string;
@@ -24,7 +24,8 @@ export default function AdminProducts() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
-  const [form, setForm] = useState({ name: "", description: "", price: "", category: "accessories", stock: "0", featured: false, material: "", images: "" });
+  const [form, setForm] = useState({ name: "", description: "", price: "", category: "accessories", stock: "0", featured: false, material: "" });
+  const [imageUrls, setImageUrls] = useState<string[]>([""]);
 
   const fetchProducts = async () => {
     const { data } = await supabase.from("products").select("*").order("created_at", { ascending: false });
@@ -35,7 +36,8 @@ export default function AdminProducts() {
   useEffect(() => { fetchProducts(); }, []);
 
   const resetForm = () => {
-    setForm({ name: "", description: "", price: "", category: "accessories", stock: "0", featured: false, material: "", images: "" });
+    setForm({ name: "", description: "", price: "", category: "accessories", stock: "0", featured: false, material: "" });
+    setImageUrls([""]);
     setEditing(null);
     setShowForm(false);
   };
@@ -50,13 +52,14 @@ export default function AdminProducts() {
       stock: String(p.stock),
       featured: p.featured,
       material: p.material || "",
-      images: p.images.join(", "),
     });
+    setImageUrls(p.images?.length ? p.images : [""]);
     setShowForm(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanImages = imageUrls.map(u => u.trim()).filter(Boolean);
     const payload = {
       name: form.name,
       description: form.description,
@@ -65,7 +68,7 @@ export default function AdminProducts() {
       stock: parseInt(form.stock),
       featured: form.featured,
       material: form.material,
-      images: form.images ? form.images.split(",").map((s) => s.trim()) : [],
+      images: cleanImages,
     };
 
     if (editing) {
@@ -87,6 +90,14 @@ export default function AdminProducts() {
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     toast({ title: "Product deleted" });
     fetchProducts();
+  };
+
+  const addImageField = () => setImageUrls([...imageUrls, ""]);
+  const removeImageField = (index: number) => setImageUrls(imageUrls.filter((_, i) => i !== index));
+  const updateImageUrl = (index: number, value: string) => {
+    const updated = [...imageUrls];
+    updated[index] = value;
+    setImageUrls(updated);
   };
 
   if (!isAdmin) return <div className="container mx-auto px-4 py-20 text-center"><p>Access Denied</p></div>;
@@ -131,11 +142,36 @@ export default function AdminProducts() {
               <label className="text-sm font-medium block mb-1">Material</label>
               <input value={form.material} onChange={(e) => setForm({ ...form, material: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50" />
             </div>
-            <div>
-              <label className="text-sm font-medium block mb-1">Image URLs (comma-separated)</label>
-              <input value={form.images} onChange={(e) => setForm({ ...form, images: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50" />
-            </div>
           </div>
+
+          {/* Multiple Image URLs */}
+          <div>
+            <label className="text-sm font-medium block mb-2">Product Images</label>
+            <div className="space-y-2">
+              {imageUrls.map((url, index) => (
+                <div key={index} className="flex gap-2 items-center">
+                  <input
+                    value={url}
+                    onChange={(e) => updateImageUrl(index, e.target.value)}
+                    placeholder={`Image URL ${index + 1}`}
+                    className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  />
+                  {url && (
+                    <img src={url} alt="" className="w-10 h-10 rounded object-cover border border-border" onError={(e) => (e.currentTarget.style.display = "none")} />
+                  )}
+                  {imageUrls.length > 1 && (
+                    <button type="button" onClick={() => removeImageField(index)} className="p-2 text-muted-foreground hover:text-destructive transition-colors">
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            <button type="button" onClick={addImageField} className="mt-2 flex items-center gap-1 text-xs text-primary hover:underline">
+              <ImagePlus className="w-3.5 h-3.5" /> Add another image
+            </button>
+          </div>
+
           <div>
             <label className="text-sm font-medium block mb-1">Description</label>
             <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50" />
@@ -153,17 +189,24 @@ export default function AdminProducts() {
       {loading ? (
         <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="h-16 rounded-lg bg-card border border-border animate-pulse" />)}</div>
       ) : products.length === 0 ? (
-        <p className="text-center py-12 text-muted-foreground">No products in database yet. Add one above or they'll be loaded from local data.</p>
+        <p className="text-center py-12 text-muted-foreground">No products yet. Add your first product above.</p>
       ) : (
         <div className="space-y-2">
           {products.map((p) => (
             <div key={p.id} className="flex items-center gap-4 p-4 rounded-xl bg-card border border-border">
-              {p.images?.[0] && <img src={p.images[0]} alt={p.name} className="w-14 h-14 rounded-lg object-cover" />}
+              <div className="flex -space-x-2">
+                {(p.images?.length ? p.images.slice(0, 3) : []).map((img, i) => (
+                  <img key={i} src={img} alt={p.name} className="w-12 h-12 rounded-lg object-cover border-2 border-card" />
+                ))}
+                {(p.images?.length ?? 0) > 3 && (
+                  <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center text-xs font-medium border-2 border-card">+{p.images.length - 3}</div>
+                )}
+              </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-medium text-sm truncate">{p.name}</h3>
-                <p className="text-xs text-muted-foreground capitalize">{p.category} · Stock: {p.stock} {p.featured && "· ⭐ Featured"}</p>
+                <p className="text-xs text-muted-foreground capitalize">{p.category} · Stock: {p.stock} · {p.images?.length || 0} images {p.featured && "· ⭐ Featured"}</p>
               </div>
-              <span className="text-sm font-bold text-primary"><span className="text-sm font-bold text-primary">₹{Number(p.price).toFixed(2)}</span></span>
+              <span className="text-sm font-bold text-primary">₹{Number(p.price).toFixed(2)}</span>
               <div className="flex gap-1">
                 <button onClick={() => startEdit(p)} className="p-2 hover:text-primary transition-colors"><Pencil className="w-4 h-4" /></button>
                 <button onClick={() => handleDelete(p.id)} className="p-2 hover:text-destructive transition-colors"><Trash2 className="w-4 h-4" /></button>
