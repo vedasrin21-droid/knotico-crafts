@@ -1,16 +1,9 @@
 import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Search, SlidersHorizontal } from "lucide-react";
-import type { ProductCategory } from "@/data/products";
 import { useProducts } from "@/hooks/useProducts";
+import { useCategories } from "@/hooks/useCategories";
 import ProductCard from "@/components/ProductCard";
-
-const categories: { value: ProductCategory | "all"; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "bags", label: "Bags" },
-  { value: "accessories", label: "Accessories" },
-  { value: "custom", label: "Custom" },
-];
 
 const sortOptions = [
   { value: "newest", label: "Newest" },
