@@ -1,16 +1,9 @@
 import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Search, SlidersHorizontal } from "lucide-react";
-import type { ProductCategory } from "@/data/products";
 import { useProducts } from "@/hooks/useProducts";
+import { useCategories } from "@/hooks/useCategories";
 import ProductCard from "@/components/ProductCard";
-
-const categories: { value: ProductCategory | "all"; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "bags", label: "Bags" },
-  { value: "accessories", label: "Accessories" },
-  { value: "custom", label: "Custom" },
-];
 
 const sortOptions = [
   { value: "newest", label: "Newest" },
@@ -20,12 +13,13 @@ const sortOptions = [
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialCategory = (searchParams.get("category") as ProductCategory | "all") || "all";
-  const [category, setCategory] = useState<ProductCategory | "all">(initialCategory);
+  const initialCategory = searchParams.get("category") || "all";
+  const [category, setCategory] = useState(initialCategory);
   const [sort, setSort] = useState("newest");
   const [search, setSearch] = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const { products } = useProducts();
+  const { categories: categoryList } = useCategories();
 
   const filtered = useMemo(() => {
     let result = [...products];
@@ -62,17 +56,27 @@ export default function ShopPage() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => (
+          <button
+            onClick={() => setCategory("all")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              category === "all"
+                ? "bg-primary text-primary-foreground"
+                : "bg-card border border-border text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            All
+          </button>
+          {categoryList.map((cat) => (
             <button
-              key={cat.value}
-              onClick={() => setCategory(cat.value)}
+              key={cat.id}
+              onClick={() => setCategory(cat.slug)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                category === cat.value
+                category === cat.slug
                   ? "bg-primary text-primary-foreground"
                   : "bg-card border border-border text-muted-foreground hover:text-foreground"
               }`}
             >
-              {cat.label}
+              {cat.name}
             </button>
           ))}
         </div>

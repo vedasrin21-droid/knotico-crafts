@@ -11,7 +11,7 @@ import custom2 from "@/assets/products/custom-2.jpg";
 import custom3 from "@/assets/products/custom-3.jpg";
 import custom4 from "@/assets/products/custom-4.jpg";
 
-export type ProductCategory = "bags" | "accessories" | "custom";
+export type ProductCategory = string;
 
 export interface Product {
   id: string;
@@ -20,7 +20,7 @@ export interface Product {
   price: number;
   compareAtPrice?: number | null;
   images: string[];
-  category: ProductCategory;
+  category: string;
   variants: { color?: string; size?: string }[];
   stock: number;
   featured: boolean;
