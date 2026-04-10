@@ -148,6 +148,35 @@ export default function AdminProducts() {
         </div>
       </div>
 
+      {/* Category Manager */}
+      {showCategoryManager && (
+        <div className="rounded-xl bg-card border border-border p-5 mb-6 space-y-4">
+          <h2 className="font-heading text-lg font-semibold">Manage Categories</h2>
+          <div className="flex gap-2">
+            <input
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              placeholder="New category name..."
+              className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddCategory())}
+            />
+            <button type="button" onClick={handleAddCategory} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-terracotta-dark transition-colors">
+              Add
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <div key={cat.id} className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border bg-muted text-sm">
+                <span className="capitalize">{cat.name}</span>
+                <button onClick={() => handleDeleteCategory(cat.id, cat.slug)} className="ml-1 text-muted-foreground hover:text-destructive transition-colors">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {showForm && (
         <form onSubmit={handleSubmit} className="rounded-xl bg-card border border-border p-5 mb-6 space-y-4">
           <h2 className="font-heading text-lg font-semibold">{editing ? "Edit Product" : "Add New Product"}</h2>
