@@ -15,6 +15,7 @@ export function useProducts() {
           name: p.name,
           description: p.description || "",
           price: Number(p.price),
+          compareAtPrice: p.compare_at_price ? Number(p.compare_at_price) : null,
           images: p.images || [],
           category: p.category as ProductCategory,
           variants: Array.isArray(p.variants) ? (p.variants as any[]) : [],
