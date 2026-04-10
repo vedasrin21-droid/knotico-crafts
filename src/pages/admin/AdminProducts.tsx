@@ -10,6 +10,7 @@ interface Product {
   name: string;
   description: string | null;
   price: number;
+  compare_at_price: number | null;
   images: string[];
   category: string;
   stock: number;
@@ -24,7 +25,7 @@ export default function AdminProducts() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
-  const [form, setForm] = useState({ name: "", description: "", price: "", category: "accessories", stock: "0", featured: false, material: "" });
+  const [form, setForm] = useState({ name: "", description: "", price: "", compareAtPrice: "", category: "accessories", stock: "0", featured: false, material: "" });
   const [imageUrls, setImageUrls] = useState<string[]>([""]);
 
   const fetchProducts = async () => {
@@ -36,7 +37,7 @@ export default function AdminProducts() {
   useEffect(() => { fetchProducts(); }, []);
 
   const resetForm = () => {
-    setForm({ name: "", description: "", price: "", category: "accessories", stock: "0", featured: false, material: "" });
+    setForm({ name: "", description: "", price: "", compareAtPrice: "", category: "accessories", stock: "0", featured: false, material: "" });
     setImageUrls([""]);
     setEditing(null);
     setShowForm(false);
@@ -48,6 +49,7 @@ export default function AdminProducts() {
       name: p.name,
       description: p.description || "",
       price: String(p.price),
+      compareAtPrice: p.compare_at_price ? String(p.compare_at_price) : "",
       category: p.category,
       stock: String(p.stock),
       featured: p.featured,
@@ -64,6 +66,7 @@ export default function AdminProducts() {
       name: form.name,
       description: form.description,
       price: parseFloat(form.price),
+      compare_at_price: form.compareAtPrice ? parseFloat(form.compareAtPrice) : null,
       category: form.category as any,
       stock: parseInt(form.stock),
       featured: form.featured,
@@ -125,6 +128,10 @@ export default function AdminProducts() {
             <div>
               <label className="text-sm font-medium block mb-1">Price *</label>
               <input required type="number" step="0.01" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50" />
+            </div>
+            <div>
+              <label className="text-sm font-medium block mb-1">Compare at Price (Original)</label>
+              <input type="number" step="0.01" value={form.compareAtPrice} onChange={(e) => setForm({ ...form, compareAtPrice: e.target.value })} placeholder="Leave empty if no discount" className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50" />
             </div>
             <div>
               <label className="text-sm font-medium block mb-1">Category</label>
@@ -206,7 +213,12 @@ export default function AdminProducts() {
                 <h3 className="font-medium text-sm truncate">{p.name}</h3>
                 <p className="text-xs text-muted-foreground capitalize">{p.category} · Stock: {p.stock} · {p.images?.length || 0} images {p.featured && "· ⭐ Featured"}</p>
               </div>
-              <span className="text-sm font-bold text-primary">₹{Number(p.price).toFixed(2)}</span>
+              <div className="text-right">
+                {p.compare_at_price && p.compare_at_price > p.price && (
+                  <span className="text-xs text-muted-foreground line-through block">₹{Number(p.compare_at_price).toFixed(2)}</span>
+                )}
+                <span className="text-sm font-bold text-primary">₹{Number(p.price).toFixed(2)}</span>
+              </div>
               <div className="flex gap-1">
                 <button onClick={() => startEdit(p)} className="p-2 hover:text-primary transition-colors"><Pencil className="w-4 h-4" /></button>
                 <button onClick={() => handleDelete(p.id)} className="p-2 hover:text-destructive transition-colors"><Trash2 className="w-4 h-4" /></button>
