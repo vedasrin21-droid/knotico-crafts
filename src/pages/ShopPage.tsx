@@ -24,7 +24,7 @@ export default function ShopPage() {
   const [category, setCategory] = useState<ProductCategory | "all">(initialCategory);
   const [sort, setSort] = useState("newest");
   const [search, setSearch] = useState("");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const { products } = useProducts();
 
   const filtered = useMemo(() => {
@@ -95,7 +95,7 @@ export default function ShopPage() {
         <input
           type="range"
           min={0}
-          max={200}
+          max={1000}
           value={priceRange[1]}
           onChange={(e) => setPriceRange([0, Number(e.target.value)])}
           className="w-40 accent-primary"

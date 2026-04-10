@@ -14,6 +14,7 @@ export default function ProductDetailPage() {
   const [qty, setQty] = useState(1);
   const [note, setNote] = useState("");
   const [selectedVariant, setSelectedVariant] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(0);
   const addItem = useCartStore((s) => s.addItem);
   const setCartOpen = useCartStore((s) => s.setCartOpen);
   const { toggleItem, isInWishlist } = useWishlistStore();
@@ -51,9 +52,26 @@ export default function ProductDetailPage() {
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-        {/* Image */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-xl overflow-hidden bg-card border border-border">
-          <img src={product.images[0]} alt={product.name} width={800} height={800} className="w-full aspect-square object-cover" />
+        {/* Images */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+          <div className="rounded-xl overflow-hidden bg-card border border-border">
+            <img src={product.images[selectedImage] || product.images[0]} alt={product.name} width={800} height={800} className="w-full aspect-square object-cover" />
+          </div>
+          {product.images.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {product.images.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelectedImage(i)}
+                  className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
+                    selectedImage === i ? "border-primary" : "border-border hover:border-muted-foreground"
+                  }`}
+                >
+                  <img src={img} alt={`${product.name} ${i + 1}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </motion.div>
 
         {/* Details */}
