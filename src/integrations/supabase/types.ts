@@ -161,6 +161,7 @@ export type Database = {
       products: {
         Row: {
           category: Database["public"]["Enums"]["product_category"]
+          compare_at_price: number | null
           created_at: string
           description: string | null
           featured: boolean
@@ -175,6 +176,7 @@ export type Database = {
         }
         Insert: {
           category?: Database["public"]["Enums"]["product_category"]
+          compare_at_price?: number | null
           created_at?: string
           description?: string | null
           featured?: boolean
@@ -189,6 +191,7 @@ export type Database = {
         }
         Update: {
           category?: Database["public"]["Enums"]["product_category"]
+          compare_at_price?: number | null
           created_at?: string
           description?: string | null
           featured?: boolean

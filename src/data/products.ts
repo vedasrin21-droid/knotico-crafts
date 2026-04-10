@@ -18,6 +18,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  compareAtPrice?: number | null;
   images: string[];
   category: ProductCategory;
   variants: { color?: string; size?: string }[];
