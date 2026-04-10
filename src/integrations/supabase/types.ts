@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       custom_order_requests: {
         Row: {
           created_at: string
@@ -160,7 +181,7 @@ export type Database = {
       }
       products: {
         Row: {
-          category: Database["public"]["Enums"]["product_category"]
+          category: string
           compare_at_price: number | null
           created_at: string
           description: string | null
@@ -175,7 +196,7 @@ export type Database = {
           variants: Json | null
         }
         Insert: {
-          category?: Database["public"]["Enums"]["product_category"]
+          category?: string
           compare_at_price?: number | null
           created_at?: string
           description?: string | null
@@ -190,7 +211,7 @@ export type Database = {
           variants?: Json | null
         }
         Update: {
-          category?: Database["public"]["Enums"]["product_category"]
+          category?: string
           compare_at_price?: number | null
           created_at?: string
           description?: string | null
