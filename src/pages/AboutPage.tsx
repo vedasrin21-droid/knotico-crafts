@@ -15,37 +15,28 @@ export default function AboutPage() {
       <div className="container mx-auto px-4 py-16 max-w-3xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
           <div>
-            <h2 className="font-heading text-2xl font-bold text-foreground mb-4">The Art of Knotting</h2>
+            <h2 className="font-heading text-2xl font-bold text-foreground mb-4">Turning passion into something ours ✨</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Knotico was born from a deep love for the ancient art of wool knotting. What started as a passion project in a small workshop has grown into a brand dedicated to bringing handcrafted beauty into everyday life. Every product in our collection is a testament to the patience, skill, and artistry of traditional textile craftsmanship.
+              Just a girl with a passion and a deep love for everything handmade. Knotico started as a quiet little dream — a few knots, a lot of heart, and the belief that something beautiful could grow from simple beginnings.
             </p>
           </div>
 
           <div>
-            <h2 className="font-heading text-2xl font-bold text-foreground mb-4">Our Craft</h2>
+            <h2 className="font-heading text-2xl font-bold text-foreground mb-4">A little brand, a big dream 🌱</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Wool knotting is more than a technique — it's a meditative practice. Our artisans carefully select each strand of premium wool and cotton, hand-dye them in our signature earthy palette, and knot them into intricate patterns that tell stories. From functional bags to decorative wall hangings, every piece carries the warmth of human touch.
+              Every piece is knotted slowly, lovingly, and with intention. There are no factories here — only hands, threads, and hours poured into creating something that feels personal. This little brand carries a big dream: to share handmade warmth with the world, one knot at a time.
             </p>
           </div>
 
           <div>
-            <h2 className="font-heading text-2xl font-bold text-foreground mb-4">Meet Our Artisans</h2>
+            <h2 className="font-heading text-2xl font-bold text-foreground mb-4">From our hearts to yours 🫶</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Behind every Knotico piece is a skilled artisan with years of experience. Our team of creators brings diverse backgrounds and unique perspectives to their craft, united by a shared commitment to quality and authenticity. We believe in fair work, sustainable practices, and preserving traditional craftsmanship for future generations.
+              Each Knotico creation is a tiny piece of love sent your way. Whether it's a bag, a charm, or a custom piece made just for you — it's made with care, packed with joy, and meant to feel like a gift, even to yourself.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-            {[
-              { stat: "500+", label: "Products Crafted" },
-              { stat: "50+", label: "Happy Customers" },
-              { stat: "100%", label: "Handmade" },
-            ].map(({ stat, label }) => (
-              <div key={label} className="text-center p-6 rounded-xl bg-card border border-border">
-                <p className="font-heading text-3xl font-bold text-primary">{stat}</p>
-                <p className="text-sm text-muted-foreground mt-1">{label}</p>
-              </div>
-            ))}
+          <div className="text-center pt-4">
+            <p className="font-heading text-2xl md:text-3xl font-bold text-primary">Knotico, made together 🧶</p>
           </div>
         </motion.div>
       </div>
