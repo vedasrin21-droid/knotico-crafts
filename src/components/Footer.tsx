@@ -34,7 +34,7 @@ export default function Footer() {
           <div>
             <h4 className="font-heading text-lg font-semibold mb-4 text-foreground">Connect</h4>
             <div className="flex gap-4">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram"><Instagram className="w-5 h-5" /></a>
+              <a href="https://instagram.com/_knotico_" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram @_knotico_"><Instagram className="w-5 h-5" /></a>
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Facebook"><Facebook className="w-5 h-5" /></a>
               <a href="mailto:hello@knotico.com" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Email"><Mail className="w-5 h-5" /></a>
             </div>
