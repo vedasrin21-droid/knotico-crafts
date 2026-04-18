@@ -17,9 +17,21 @@ export default function ShopPage() {
   const [category, setCategory] = useState(initialCategory);
   const [sort, setSort] = useState("newest");
   const [search, setSearch] = useState("");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const { products } = useProducts();
   const { categories: categoryList } = useCategories();
+
+  const maxPrice = useMemo(() => {
+    if (!products.length) return 1000;
+    return Math.max(1000, Math.ceil(Math.max(...products.map((p) => p.price)) / 100) * 100);
+  }, [products]);
+
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice]);
+
+  // Keep upper bound in sync if it was at the previous max (i.e. user hasn't customized)
+  const [userAdjusted, setUserAdjusted] = useState(false);
+  useMemo(() => {
+    if (!userAdjusted) setPriceRange([0, maxPrice]);
+  }, [maxPrice, userAdjusted]);
 
   const filtered = useMemo(() => {
     let result = [...products];
