@@ -110,9 +110,10 @@ export default function ShopPage() {
         <input
           type="range"
           min={0}
-          max={1000}
+          max={maxPrice}
+          step={Math.max(10, Math.round(maxPrice / 100))}
           value={priceRange[1]}
-          onChange={(e) => setPriceRange([0, Number(e.target.value)])}
+          onChange={(e) => { setUserAdjusted(true); setPriceRange([0, Number(e.target.value)]); }}
           className="w-40 accent-primary"
         />
         <span className="text-sm font-medium">₹{priceRange[0]} – ₹{priceRange[1]}</span>
