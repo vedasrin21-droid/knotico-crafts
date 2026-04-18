@@ -38,11 +38,11 @@ export default function ContactPage() {
           </div>
           <div className="flex items-start gap-4">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <Phone className="w-5 h-5 text-primary" />
+              <Instagram className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-medium text-foreground">Phone</h3>
-              <p className="text-sm text-muted-foreground">+91 9032995731</p>
+              <h3 className="font-medium text-foreground">Instagram</h3>
+              <a href="https://instagram.com/_knotico_" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">@_knotico_</a>
             </div>
           </div>
           <div className="flex items-start gap-4">
