@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPin, Phone, Mail } from "lucide-react";
+import { MapPin, Instagram, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function ContactPage() {
