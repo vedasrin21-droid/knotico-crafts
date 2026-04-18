@@ -123,7 +123,7 @@ export default function ShopPage() {
       {filtered.length === 0 ? (
         <div className="text-center py-20 text-muted-foreground">
           <p className="text-lg">No products found matching your criteria.</p>
-          <button onClick={() => { setSearch(""); setCategory("all"); setPriceRange([0, 200]); }} className="mt-3 text-primary hover:underline text-sm">Clear filters</button>
+          <button onClick={() => { setSearch(""); setCategory("all"); setUserAdjusted(false); setPriceRange([0, maxPrice]); }} className="mt-3 text-primary hover:underline text-sm">Clear filters</button>
         </div>
       ) : (
         <>
