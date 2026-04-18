@@ -26,10 +26,9 @@ export default function ShopPage() {
   }, [products]);
 
   const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice]);
-
-  // Keep upper bound in sync if it was at the previous max (i.e. user hasn't customized)
   const [userAdjusted, setUserAdjusted] = useState(false);
-  useMemo(() => {
+
+  useEffect(() => {
     if (!userAdjusted) setPriceRange([0, maxPrice]);
   }, [maxPrice, userAdjusted]);
 
