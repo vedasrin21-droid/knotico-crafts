@@ -101,10 +101,11 @@ export default function HomePage() {
       {/* Our Story Teaser */}
       <section className="py-16 md:py-24 bg-card">
         <div className="container mx-auto px-4 max-w-3xl text-center">
-          <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">Our Story</h2>
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">Turning passion into something ours ✨</h2>
           <p className="text-muted-foreground mt-6 text-lg leading-relaxed">
-            At Knotico, we believe in the beauty of slow craftsmanship. Each knot, each strand of wool, carries the warmth of human hands and the tradition of textile artistry passed down through generations. Our artisans pour their passion into every piece, creating functional art that brings warmth and character to your life.
+            Just a girl with a passion and a deep love for everything handmade. A little brand, a big dream — knotted slowly, lovingly, and sent from our hearts to yours. 🫶
           </p>
+          <p className="font-heading text-xl md:text-2xl font-bold text-primary mt-6">Knotico, made together 🧶</p>
           <Link
             to="/about"
             className="inline-flex items-center gap-2 mt-6 text-primary font-medium hover:underline"
