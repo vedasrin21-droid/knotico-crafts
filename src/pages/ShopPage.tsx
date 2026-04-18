@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { useProducts } from "@/hooks/useProducts";
@@ -17,9 +17,20 @@ export default function ShopPage() {
   const [category, setCategory] = useState(initialCategory);
   const [sort, setSort] = useState("newest");
   const [search, setSearch] = useState("");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const { products } = useProducts();
   const { categories: categoryList } = useCategories();
+
+  const maxPrice = useMemo(() => {
+    if (!products.length) return 1000;
+    return Math.max(1000, Math.ceil(Math.max(...products.map((p) => p.price)) / 100) * 100);
+  }, [products]);
+
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice]);
+  const [userAdjusted, setUserAdjusted] = useState(false);
+
+  useEffect(() => {
+    if (!userAdjusted) setPriceRange([0, maxPrice]);
+  }, [maxPrice, userAdjusted]);
 
   const filtered = useMemo(() => {
     let result = [...products];
@@ -99,9 +110,10 @@ export default function ShopPage() {
         <input
           type="range"
           min={0}
-          max={1000}
+          max={maxPrice}
+          step={Math.max(10, Math.round(maxPrice / 100))}
           value={priceRange[1]}
-          onChange={(e) => setPriceRange([0, Number(e.target.value)])}
+          onChange={(e) => { setUserAdjusted(true); setPriceRange([0, Number(e.target.value)]); }}
           className="w-40 accent-primary"
         />
         <span className="text-sm font-medium">₹{priceRange[0]} – ₹{priceRange[1]}</span>
@@ -111,7 +123,7 @@ export default function ShopPage() {
       {filtered.length === 0 ? (
         <div className="text-center py-20 text-muted-foreground">
           <p className="text-lg">No products found matching your criteria.</p>
-          <button onClick={() => { setSearch(""); setCategory("all"); setPriceRange([0, 200]); }} className="mt-3 text-primary hover:underline text-sm">Clear filters</button>
+          <button onClick={() => { setSearch(""); setCategory("all"); setUserAdjusted(false); setPriceRange([0, maxPrice]); }} className="mt-3 text-primary hover:underline text-sm">Clear filters</button>
         </div>
       ) : (
         <>
