@@ -26,7 +26,11 @@ interface Order {
   shipping_address: string;
   city: string | null;
   notes: string | null;
+  shipping_cost: number | null;
+  shipping_method: string | null;
+  estimated_delivery: string | null;
   created_at: string;
+
 }
 
 const statusColors: Record<OrderStatus, string> = {
