@@ -60,7 +60,7 @@ export default function HomePage() {
           {[
             { icon: Sparkles, title: "Handcrafted", desc: "Every piece is made by hand with premium materials" },
             { icon: Gift, title: "Perfect Gifts", desc: "Personalized items for every special occasion" },
-            { icon: Truck, title: "COD Available", desc: "Cash on delivery — order confirmed via call" },
+            { icon: Heart, title: "Made with Love", desc: "Thoughtfully crafted for you, from our heart to yours" },
           ].map(({ icon: Icon, title, desc }) => (
             <div key={title} className="flex items-start gap-4 p-4">
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
