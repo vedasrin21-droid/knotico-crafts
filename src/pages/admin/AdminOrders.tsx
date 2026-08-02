@@ -26,7 +26,11 @@ interface Order {
   shipping_address: string;
   city: string | null;
   notes: string | null;
+  shipping_cost: number | null;
+  shipping_method: string | null;
+  estimated_delivery: string | null;
   created_at: string;
+
 }
 
 const statusColors: Record<OrderStatus, string> = {
@@ -120,7 +124,12 @@ export default function AdminOrders() {
                     <p className="text-sm text-muted-foreground">{order.customer_email} · {order.phone}</p>
                     <p className="text-sm text-muted-foreground mt-1">{order.shipping_address}{order.city ? `, ${order.city}` : ""}</p>
                     {order.notes && <p className="text-xs text-muted-foreground mt-1 italic">Note: {order.notes}</p>}
+                    <p className="text-xs text-muted-foreground mt-2">
+                      🚚 {order.shipping_method || "India Post"} · Shipping ₹{Number(order.shipping_cost ?? 0).toFixed(2)}
+                      {order.estimated_delivery ? ` · ETA: ${order.estimated_delivery}` : ""}
+                    </p>
                     <p className="text-xs text-muted-foreground mt-2">{new Date(order.created_at).toLocaleDateString()}</p>
+
 
                     {/* Toggle products */}
                     <button

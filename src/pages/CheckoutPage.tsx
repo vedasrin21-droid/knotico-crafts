@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Truck } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { estimateShipping, FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
 
 export default function CheckoutPage() {
-  const { items, totalPrice, clearCart } = useCartStore();
+  const { items, totalItems, totalPrice, clearCart } = useCartStore();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [form, setForm] = useState({
@@ -14,7 +15,16 @@ export default function CheckoutPage() {
   });
   const [submitting, setSubmitting] = useState(false);
 
+  const subtotal = totalPrice();
+  const shipping = useMemo(
+    () => estimateShipping(form.zip, totalItems(), subtotal),
+    [form.zip, items, subtotal]
+  );
+  const grandTotal = subtotal + shipping.cost;
+  const pinEntered = form.zip.replace(/\D/g, "").length === 6;
+
   const update = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
+
 
   if (items.length === 0) {
     return (
@@ -38,11 +48,15 @@ export default function CheckoutPage() {
         customer_name: form.fullName,
         customer_email: form.email,
         phone: form.phone,
-        total_amount: totalPrice(),
+        total_amount: grandTotal,
         shipping_address: form.address,
         city: form.city,
         zip: form.zip,
+        shipping_cost: shipping.cost,
+        shipping_method: shipping.method,
+        estimated_delivery: shipping.etaLabel,
         notes: form.notes || null,
+
       });
 
     if (orderError) {
@@ -111,8 +125,8 @@ export default function CheckoutPage() {
               <input required value={form.city} onChange={(e) => update("city", e.target.value)} className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" />
             </div>
             <div>
-              <label className="text-sm font-medium block mb-1.5">ZIP Code</label>
-              <input value={form.zip} onChange={(e) => update("zip", e.target.value)} className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" />
+              <label className="text-sm font-medium block mb-1.5">PIN Code *</label>
+              <input required inputMode="numeric" maxLength={6} placeholder="6-digit PIN" value={form.zip} onChange={(e) => update("zip", e.target.value)} className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" />
             </div>
           </div>
           <div>
@@ -120,12 +134,30 @@ export default function CheckoutPage() {
             <textarea value={form.notes} onChange={(e) => update("notes", e.target.value)} rows={2} placeholder="Any special instructions..." className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm resize-none" />
           </div>
 
+          <div className="p-4 rounded-lg bg-card border border-border space-y-2">
+            <div className="flex items-start gap-2">
+              <Truck className="w-4 h-4 mt-0.5 text-primary shrink-0" />
+              <div className="text-sm">
+                <p className="font-medium text-foreground">{shipping.method}</p>
+                <p className="text-muted-foreground">
+                  {pinEntered
+                    ? `Estimated delivery: ${shipping.etaLabel}`
+                    : `Enter your PIN code for an exact estimate — currently showing ${shipping.etaRangeLabel}`}
+                </p>
+                <p className="text-muted-foreground text-xs mt-1">
+                  Approx. weight {shipping.weightGrams} g · Shipping {shipping.isFree ? "FREE" : `₹${shipping.cost.toFixed(2)}`}
+                  {!shipping.isFree && ` · Free above ₹${FREE_SHIPPING_THRESHOLD}`}
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="p-4 rounded-lg bg-card border border-border">
             <p className="text-sm text-muted-foreground">💰 <strong className="text-foreground">Cash on Delivery (COD)</strong> — Our team will contact you to confirm your order before shipping.</p>
           </div>
 
           <button type="submit" disabled={submitting} className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-terracotta-dark transition-colors disabled:opacity-50">
-            {submitting ? "Placing Order..." : `Place Order — ₹${totalPrice().toFixed(2)}`}
+            {submitting ? "Placing Order..." : `Place Order — ₹${grandTotal.toFixed(2)}`}
           </button>
         </form>
 
@@ -144,11 +176,26 @@ export default function CheckoutPage() {
                 </div>
               ))}
             </div>
+            <div className="border-t border-border mt-4 pt-4 space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Subtotal</span>
+                <span>₹{subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Shipping (India Post)</span>
+                <span>{shipping.isFree ? "FREE" : `₹${shipping.cost.toFixed(2)}`}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Estimated delivery</span>
+                <span className="text-right">{shipping.etaRangeLabel}</span>
+              </div>
+            </div>
             <div className="border-t border-border mt-4 pt-4 flex justify-between font-bold text-lg">
               <span>Total</span>
-              <span className="text-primary">₹{totalPrice().toFixed(2)}</span>
+              <span className="text-primary">₹{grandTotal.toFixed(2)}</span>
             </div>
           </div>
+
         </div>
       </div>
     </div>

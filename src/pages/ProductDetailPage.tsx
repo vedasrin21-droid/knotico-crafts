@@ -1,11 +1,12 @@
 import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
-import { ArrowLeft, Heart, Minus, Plus, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Heart, Minus, Plus, ShoppingBag, Truck } from "lucide-react";
 import { useProducts } from "@/hooks/useProducts";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import ProductCard from "@/components/ProductCard";
 import { motion } from "framer-motion";
+import { estimateShipping, FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -15,9 +16,12 @@ export default function ProductDetailPage() {
   const [note, setNote] = useState("");
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [pin, setPin] = useState("");
   const addItem = useCartStore((s) => s.addItem);
   const setCartOpen = useCartStore((s) => s.setCartOpen);
   const { toggleItem, isInWishlist } = useWishlistStore();
+  const pinEstimate = estimateShipping(pin, qty, (product?.price ?? 0) * qty);
+
 
   if (!product) {
     return (
@@ -161,6 +165,34 @@ export default function ProductDetailPage() {
               <Heart className={`w-5 h-5 ${wishlisted ? "fill-primary" : ""}`} />
             </button>
           </div>
+
+          <div className="mt-6 p-4 rounded-lg bg-card border border-border">
+            <div className="flex items-center gap-2 mb-2">
+              <Truck className="w-4 h-4 text-primary" />
+              <p className="text-sm font-medium">Delivery by India Post</p>
+            </div>
+            <div className="flex gap-2">
+              <input
+                inputMode="numeric"
+                maxLength={6}
+                placeholder="Enter PIN code"
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+                className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              {pin.replace(/\D/g, "").length === 6 ? (
+                <>
+                  Arrives in <strong className="text-foreground">{pinEstimate.etaLabel}</strong> ·{" "}
+                  Shipping {pinEstimate.isFree ? "FREE" : `₹${pinEstimate.cost.toFixed(2)}`}
+                </>
+              ) : (
+                <>Typically 2–10 business days across India · Shipping from ₹40 · Free above ₹{FREE_SHIPPING_THRESHOLD}</>
+              )}
+            </p>
+          </div>
+
         </motion.div>
       </div>
 

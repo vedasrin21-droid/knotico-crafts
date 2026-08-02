@@ -137,10 +137,13 @@ export type Database = {
           created_at: string
           customer_email: string
           customer_name: string
+          estimated_delivery: string | null
           id: string
           notes: string | null
           phone: string
           shipping_address: string
+          shipping_cost: number
+          shipping_method: string | null
           status: Database["public"]["Enums"]["order_status"]
           total_amount: number
           updated_at: string
@@ -152,10 +155,13 @@ export type Database = {
           created_at?: string
           customer_email: string
           customer_name: string
+          estimated_delivery?: string | null
           id?: string
           notes?: string | null
           phone: string
           shipping_address: string
+          shipping_cost?: number
+          shipping_method?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           total_amount: number
           updated_at?: string
@@ -167,10 +173,13 @@ export type Database = {
           created_at?: string
           customer_email?: string
           customer_name?: string
+          estimated_delivery?: string | null
           id?: string
           notes?: string | null
           phone?: string
           shipping_address?: string
+          shipping_cost?: number
+          shipping_method?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           total_amount?: number
           updated_at?: string
