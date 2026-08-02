@@ -1,11 +1,12 @@
 import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
-import { ArrowLeft, Heart, Minus, Plus, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Heart, Minus, Plus, ShoppingBag, Truck } from "lucide-react";
 import { useProducts } from "@/hooks/useProducts";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import ProductCard from "@/components/ProductCard";
 import { motion } from "framer-motion";
+import { estimateShipping, FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -15,9 +16,12 @@ export default function ProductDetailPage() {
   const [note, setNote] = useState("");
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [pin, setPin] = useState("");
   const addItem = useCartStore((s) => s.addItem);
   const setCartOpen = useCartStore((s) => s.setCartOpen);
   const { toggleItem, isInWishlist } = useWishlistStore();
+  const pinEstimate = estimateShipping(pin, qty, (product?.price ?? 0) * qty);
+
 
   if (!product) {
     return (
