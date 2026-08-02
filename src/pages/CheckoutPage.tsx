@@ -48,11 +48,15 @@ export default function CheckoutPage() {
         customer_name: form.fullName,
         customer_email: form.email,
         phone: form.phone,
-        total_amount: totalPrice(),
+        total_amount: grandTotal,
         shipping_address: form.address,
         city: form.city,
         zip: form.zip,
+        shipping_cost: shipping.cost,
+        shipping_method: shipping.method,
+        estimated_delivery: shipping.etaLabel,
         notes: form.notes || null,
+
       });
 
     if (orderError) {
