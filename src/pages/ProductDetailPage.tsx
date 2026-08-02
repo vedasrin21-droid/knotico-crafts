@@ -161,6 +161,34 @@ export default function ProductDetailPage() {
               <Heart className={`w-5 h-5 ${wishlisted ? "fill-primary" : ""}`} />
             </button>
           </div>
+
+          <div className="mt-6 p-4 rounded-lg bg-card border border-border">
+            <div className="flex items-center gap-2 mb-2">
+              <Truck className="w-4 h-4 text-primary" />
+              <p className="text-sm font-medium">Delivery by India Post</p>
+            </div>
+            <div className="flex gap-2">
+              <input
+                inputMode="numeric"
+                maxLength={6}
+                placeholder="Enter PIN code"
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+                className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              {pin.replace(/\D/g, "").length === 6 ? (
+                <>
+                  Arrives in <strong className="text-foreground">{pinEstimate.etaLabel}</strong> ·{" "}
+                  Shipping {pinEstimate.isFree ? "FREE" : `₹${pinEstimate.cost.toFixed(2)}`}
+                </>
+              ) : (
+                <>Typically 2–10 business days across India · Shipping from ₹40 · Free above ₹{FREE_SHIPPING_THRESHOLD}</>
+              )}
+            </p>
+          </div>
+
         </motion.div>
       </div>
 
