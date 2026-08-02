@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Truck } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { estimateShipping, FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
 
 export default function CheckoutPage() {
-  const { items, totalPrice, clearCart } = useCartStore();
+  const { items, totalItems, totalPrice, clearCart } = useCartStore();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [form, setForm] = useState({
@@ -14,7 +15,16 @@ export default function CheckoutPage() {
   });
   const [submitting, setSubmitting] = useState(false);
 
+  const subtotal = totalPrice();
+  const shipping = useMemo(
+    () => estimateShipping(form.zip, totalItems(), subtotal),
+    [form.zip, items, subtotal]
+  );
+  const grandTotal = subtotal + shipping.cost;
+  const pinEntered = form.zip.replace(/\D/g, "").length === 6;
+
   const update = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
+
 
   if (items.length === 0) {
     return (
